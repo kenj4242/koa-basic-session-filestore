@@ -1,0 +1,24 @@
+{
+  "name": "koa-basic-session-filestore",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": { 
+		"name" : "Ken Johnson",
+			"email" : "kenj4242@gmail.com"
+	},
+  "license": "ISC",
+  "dependencies": {
+    "babel-polyfill": "^6.22.0",
+    "koa-cookie-session": "file:///mnt/olddata/home/sites/ken/Koa-Cookie-Session"
+  },
+  "devDependencies": {
+    "autoreload-gulp": "^0.1.0",
+    "babel-preset-latest": "^6.22.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2"
+  }
+}
