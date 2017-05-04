@@ -1,18 +1,15 @@
-import { Store } from "koa-cookie-session"
-import uid from "uid-safe"
-import Promise from "bluebird"
-import mkdirp from "mkdirp"
-import glob from "glob"
-const fs = Promise.promisifyAll(require("fs"));
+const uid = require("uid-safe")
+const Promise = require("bluebird")
+const mkdirp = require("mkdirp")
+const glob = require("glob")
 
+const fs = Promise.promisifyAll(require("fs"));
 const globAsync = Promise.promisify(glob);
 
 
-
-export default class FileStore extends Store {
+class FileStore {
 
 	constructor(serverOpts) {
-		super();
 		this.dir = serverOpts.directory || '/tmp';
 		this.pfx = serverOpts.prefix || 'session-';
 		this.sfx = serverOpts.suffix || '.json';
@@ -141,5 +138,11 @@ export default class FileStore extends Store {
 	}
 
 }
+
+
+module.exports = FileStore
+
+
+
 
 

@@ -1,19 +1,22 @@
 {
   "name": "koa-basic-session-filestore",
   "version": "0.0.1",
-  "description": "",
+  "description": "Filesystem storage module for koa-basic-session",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": { 
 		"name" : "Ken Johnson",
-			"email" : "kenj4242@gmail.com"
+		"email" : "kenj4242@gmail.com"
 	},
   "license": "ISC",
+	"repository": {
+   "type": "git", 
+	 "url": "https://github.com/kenj4242/koa-basic-session-filestore.git"
+	},
   "dependencies": {
-    "babel-polyfill": "^6.22.0",
-    "koa-cookie-session": "file:///mnt/olddata/home/sites/ken/Koa-Cookie-Session"
+    "babel-polyfill": "^6.22.0"
   },
   "devDependencies": {
     "autoreload-gulp": "^0.1.0",

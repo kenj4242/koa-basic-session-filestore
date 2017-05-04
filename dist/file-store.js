@@ -1,67 +1,38 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _koaCookieSession = require("koa-cookie-session");
-
-var _uidSafe = require("uid-safe");
-
-var _uidSafe2 = _interopRequireDefault(_uidSafe);
-
-var _bluebird = require("bluebird");
-
-var _bluebird2 = _interopRequireDefault(_bluebird);
-
-var _mkdirp = require("mkdirp");
-
-var _mkdirp2 = _interopRequireDefault(_mkdirp);
-
-var _glob = require("glob");
-
-var _glob2 = _interopRequireDefault(_glob);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new _bluebird2.default(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return _bluebird2.default.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+var uid = require("uid-safe");
+var Promise = require("bluebird");
+var mkdirp = require("mkdirp");
+var glob = require("glob");
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+var fs = Promise.promisifyAll(require("fs"));
+var globAsync = Promise.promisify(glob);
 
-var fs = _bluebird2.default.promisifyAll(require("fs"));
-
-var globAsync = _bluebird2.default.promisify(_glob2.default);
-
-var FileStore = function (_Store) {
-	_inherits(FileStore, _Store);
-
+var FileStore = function () {
 	function FileStore(serverOpts) {
 		_classCallCheck(this, FileStore);
 
-		var _this = _possibleConstructorReturn(this, (FileStore.__proto__ || Object.getPrototypeOf(FileStore)).call(this));
+		this.dir = serverOpts.directory || '/tmp';
+		this.pfx = serverOpts.prefix || 'session-';
+		this.sfx = serverOpts.suffix || '.json';
+		this.sidLength = serverOpts.sidLength || 24;
+		this.maxAge = serverOpts.maxAge || 86400 * 14;
 
-		_this.dir = serverOpts.directory || '/tmp';
-		_this.pfx = serverOpts.prefix || 'session-';
-		_this.sfx = serverOpts.suffix || '.json';
-		_this.sidLength = serverOpts.sidLength || 24;
-		_this.maxAge = serverOpts.maxAge || 86400 * 14;
-
-		_this.gcFrequency = serverOpts.gcFrequency || 0;
-		_this.gcCounter = 0;
+		this.gcFrequency = serverOpts.gcFrequency || 0;
+		this.gcCounter = 0;
 
 		// try to create the session dir if it doesn't exist
 		try {
-			var stat = fs.statSync(_this.dir);
+			var stat = fs.statSync(this.dir);
 		} catch (e) {
-			_mkdirp2.default.sync(_this.dir);
+			mkdirp.sync(this.dir);
 		}
-		return _this;
 	}
 
 	_createClass(FileStore, [{
@@ -222,7 +193,7 @@ var FileStore = function (_Store) {
 		key: "gc",
 		value: function () {
 			var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee5() {
-				var _this2 = this;
+				var _this = this;
 
 				var files, now;
 				return regeneratorRuntime.wrap(function _callee5$(_context5) {
@@ -271,7 +242,7 @@ var FileStore = function (_Store) {
 													case 2:
 														s = _context4.sent;
 
-														if (!(now - s.ctime > _this2.maxAge * 1000)) {
+														if (!(now - s.ctime > _this.maxAge * 1000)) {
 															_context4.next = 12;
 															break;
 														}
@@ -295,7 +266,7 @@ var FileStore = function (_Store) {
 														return _context4.stop();
 												}
 											}
-										}, _callee4, _this2, [[4, 9]]);
+										}, _callee4, _this, [[4, 9]]);
 									}));
 
 									return function (_x5) {
@@ -344,7 +315,7 @@ var FileStore = function (_Store) {
 								// I'm too lazzy to figure this out exactly right now - TODO
 
 								_context6.next = 3;
-								return (0, _uidSafe2.default)(blen + 1);
+								return uid(blen + 1);
 
 							case 3:
 								id = _context6.sent;
@@ -372,6 +343,6 @@ var FileStore = function (_Store) {
 	}]);
 
 	return FileStore;
-}(_koaCookieSession.Store);
+}();
 
-exports.default = FileStore;
+module.exports = FileStore;
