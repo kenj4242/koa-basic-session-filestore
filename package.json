@@ -1,6 +1,6 @@
 {
   "name": "koa-basic-session-filestore",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Filesystem storage module for koa-basic-session",
   "main": "index.js",
   "scripts": {

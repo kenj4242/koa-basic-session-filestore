@@ -60,24 +60,23 @@ var FileStore = function () {
 									break;
 								}
 
-								sess.id = sid;
-
-								_context.prev = 4;
-								_context.next = 7;
+								_context.prev = 3;
+								_context.next = 6;
 								return fs.readFileAsync(this.dir + "/" + this.pfx + sid + this.sfx, 'utf8');
 
-							case 7:
+							case 6:
 								data = _context.sent;
 
 								if (data) {
 									sess.data = JSON.parse(data);
 								}
+								sess.id = sid;
 								_context.next = 13;
 								break;
 
 							case 11:
 								_context.prev = 11;
-								_context.t0 = _context["catch"](4);
+								_context.t0 = _context["catch"](3);
 
 							case 13:
 								return _context.abrupt("return", sess);
@@ -87,7 +86,7 @@ var FileStore = function () {
 								return _context.stop();
 						}
 					}
-				}, _callee, this, [[4, 11]]);
+				}, _callee, this, [[3, 11]]);
 			}));
 
 			function get(_x) {

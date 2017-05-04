@@ -41,13 +41,13 @@ class FileStore {
 		}
 
 		if (sid) {
-			sess.id = sid;
 
 			try {
 				var data = await fs.readFileAsync(`${this.dir}/${this.pfx}${sid}${this.sfx}`, 'utf8');
 				if (data) {
 					sess.data = JSON.parse(data);
 				}
+				sess.id = sid;
 			} catch(e) {
 				// session file not found, or format bad
 			}
